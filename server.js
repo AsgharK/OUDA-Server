@@ -7,17 +7,20 @@ var express = require('express'),
   morgan = require('morgan'),
   http = require('http'),
   path = require('path');
+  socketIO = require('socket.io'); 
 
 var routes = require('./routes');
 
-var app = module.exports = express();
-
+var app = module.exports = express(),
+    server = http.createServer(app),
+    io = socketIO(server);
 /**
  * Configuration
  */
 
 // all environments
 app.set('port', process.env.PORT || 9001);
+app.set('socketIo', io);
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -31,7 +34,13 @@ app.use('/', routes);
 /**
  * Start Server
  */
-
-http.createServer(app).listen(app.get('port'), function () {
+server.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
+});
+
+/**
+ * Socket.io section
+ */
+io.sockets.on('connection', function(newSocekt){
+  console.log("Client connected...");
 });
