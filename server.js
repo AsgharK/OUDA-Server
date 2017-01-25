@@ -41,6 +41,7 @@ server.listen(app.get('port'), function () {
 /**
  * Socket.io section
  */
-io.sockets.on('connection', function(newSocekt){
+io.sockets.on('connection', function(newSocket){
   console.log("Client connected...");
+  newSocket.on('disconnect', console.log("Client disconnect"));
 });
